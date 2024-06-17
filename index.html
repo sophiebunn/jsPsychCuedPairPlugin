@@ -19,15 +19,17 @@
     const jsPsych = initJsPsych();
     var timeline = [];
 
-    //procedure to run each test
+    //trial variable pass thru
     var cuedpair_trial = {
         type: jsPsychCuedPairHtml,
         Cue: jsPsych.timelineVariable('Cue Words'),
         Target: jsPsych.timelineVariable('Target Words'),
         Condition: jsPsych.timelineVariable('RP_RS_Cond'),
-        Trial_Duration: 3000,
+        Mistakes_Alloted: 1,
+        Trial_Duration: 5000,
     };
 
+    //procedure declaration, assembling timeline.
     var procedure = {
         timeline: [cuedpair_trial],
         timeline_variables: wp_list,
@@ -41,6 +43,9 @@
         `,
         on_load: function () {
             jsPsych.data.get()
+                .ignore('internal_node_id')
+                .ignore('trial_type')
+                .ignore('time_elapsed')
                 .localSave('csv', 'associative_wp.csv');
         }
     };
