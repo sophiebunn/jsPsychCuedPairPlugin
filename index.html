@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cued Pair Experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.4"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
+    <script src = "jsPsychCuedPairHtml.js"></script>
+    <script src="ex_wp_list.js"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
+    <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body></body>
+<script>
+    //declaring varibles
+    const jsPsych = initJsPsych();
+    var timeline = [];
+
+    //procedure to run each test
+    var cuedpair_trial = {
+        type: jsPsychCuedPairHtml,
+        Cue: jsPsych.timelineVariable('Cue Words'),
+        Target: jsPsych.timelineVariable('Target Words'),
+        Condition: jsPsych.timelineVariable('RP_RS_Cond'),
+        Trial_Duration: 3000,
+    };
+
+    var procedure = {
+        timeline: [cuedpair_trial],
+        timeline_variables: wp_list,
+        randomize_order: true,
+    }
+
+    var end = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `
+        <p>Congratulations! You are done</p>
+        `,
+        on_load: function () {
+            jsPsych.data.get()
+                .localSave('csv', 'associative_wp.csv');
+        }
+    };
+
+    //pushing to timeline and running
+    timeline.push(procedure, end)
+    jsPsych.run(timeline);
+    
+</script>
+</html>
